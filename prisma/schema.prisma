@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks Stock[]
+
+  @@map("tb_companies")
+}
+
+model Stock {
+  id           Int      @id @default(autoincrement())
+  name         String
+  companyId    Int
+  quantity     Int
+  initialPrice Decimal
+  isAvailable  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sellOffers   SellOffer[]
+  buyOffers    BuyOffer[]
+  transactions Transaction[]
+
+  @@map("tb_stocks")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  balance   Decimal  @default(0.00)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sellOffers SellOffer[]
+  buyOffers  BuyOffer[]
+
+  @@map("tb_users")
+}
+
+model SellOffer {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  stockId   Int
+  price     Decimal
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock        Stock         @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("tb_sell_offers")
+}
+
+model BuyOffer {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  stockId   Int
+  price     Decimal
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock        Stock         @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("tb_buy_offers")
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  sellOfferId Int
+  buyOfferId  Int
+  stockId     Int
+  price       Decimal
+  quantity    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sellOffer SellOffer @relation(fields: [sellOfferId], references: [id], onDelete: Cascade)
+  buyOffer  BuyOffer  @relation(fields: [buyOfferId], references: [id], onDelete: Cascade)
+  stock     Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@map("tb_transactions")
+}
