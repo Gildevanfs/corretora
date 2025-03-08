@@ -16,6 +16,6 @@ Antes de começar, certifique-se de ter o seguinte instalado:
 Clone o repositório e instale as dependências:  
 
 ```bash
-git clone https://github.com/seu-usuario/corretora-acoes.git
+git clone https://github.com/Gildevanfs/corretora.git
 cd corretora-acoes
 npm install
