@@ -14,11 +14,11 @@ datasource db {
 }
 
 model Company {
-  id        Int      @id @default(autoincrement())
-  name      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  des_name_cpn       String
+  is_active_cpn      Boolean   @default(true)
+  hra_created_at_cpn DateTime  @default(now())
+  hra_updated_at_cpn DateTime? @updatedAt
 
   stocks Stock[]
 
@@ -26,16 +26,16 @@ model Company {
 }
 
 model Stock {
-  id           Int      @id @default(autoincrement())
-  name         String
-  companyId    Int
-  quantity     Int
-  initialPrice Decimal
-  isAvailable  Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                    Int       @id @default(autoincrement())
+  des_stock_name_stk    String
+  id_company_stk        Int
+  num_quantity_stk      Int
+  vlr_initial_price_stk Decimal
+  is_available_stk      Boolean   @default(true)
+  hra_created_at_stk    DateTime  @default(now())
+  hra_updated_at_stk    DateTime? @updatedAt
 
-  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company      Company       @relation(fields: [id_company_stk], references: [id], onDelete: Cascade)
   sellOffers   SellOffer[]
   buyOffers    BuyOffer[]
   transactions Transaction[]
@@ -44,13 +44,13 @@ model Stock {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  balance   Decimal  @default(0.00)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  des_name_usr       String
+  des_email_usr      String    @unique
+  vlr_balance_usr    Decimal   @default(0.00)
+  is_active_usr      Boolean   @default(true)
+  hra_created_at_usr DateTime  @default(now())
+  hra_updated_at_usr DateTime? @updatedAt
 
   sellOffers SellOffer[]
   buyOffers  BuyOffer[]
@@ -59,50 +59,50 @@ model User {
 }
 
 model SellOffer {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  stockId   Int
-  price     Decimal
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  id_user_slf        Int
+  id_stock_slf       Int
+  vlr_price_slf      Decimal
+  num_quantity_slf   Int
+  hra_created_at_slf DateTime  @default(now())
+  hra_updated_at_slf DateTime? @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stock        Stock         @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [id_user_slf], references: [id], onDelete: Cascade)
+  stock        Stock         @relation(fields: [id_stock_slf], references: [id], onDelete: Cascade)
   transactions Transaction[]
 
   @@map("tb_sell_offers")
 }
 
 model BuyOffer {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  stockId   Int
-  price     Decimal
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  id_user_bfs        Int
+  id_stock_bfs       Int
+  vlr_price_bfs      Decimal
+  num_quantity_bfs   Int
+  hra_created_at_bfs DateTime  @default(now())
+  hra_updated_at_bfs DateTime? @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stock        Stock         @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [id_user_bfs], references: [id], onDelete: Cascade)
+  stock        Stock         @relation(fields: [id_stock_bfs], references: [id], onDelete: Cascade)
   transactions Transaction[]
 
   @@map("tb_buy_offers")
 }
 
 model Transaction {
-  id          Int      @id @default(autoincrement())
-  sellOfferId Int
-  buyOfferId  Int
-  stockId     Int
-  price       Decimal
-  quantity    Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 Int       @id @default(autoincrement())
+  id_sell_offers_tsc Int
+  id_buy_offers_tsc  Int
+  id_stock_tsc       Int
+  vlr_price_tsc      Decimal
+  num_quantity_tsc   Int
+  hra_created_at_tsc DateTime  @default(now())
+  hra_updated_at_tsc DateTime? @updatedAt
 
-  sellOffer SellOffer @relation(fields: [sellOfferId], references: [id], onDelete: Cascade)
-  buyOffer  BuyOffer  @relation(fields: [buyOfferId], references: [id], onDelete: Cascade)
-  stock     Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  sellOffer SellOffer @relation(fields: [id_sell_offers_tsc], references: [id], onDelete: Cascade)
+  buyOffer  BuyOffer  @relation(fields: [id_buy_offers_tsc], references: [id], onDelete: Cascade)
+  stock     Stock     @relation(fields: [id_stock_tsc], references: [id], onDelete: Cascade)
 
   @@map("tb_transactions")
 }
